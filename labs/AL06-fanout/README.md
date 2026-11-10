@@ -9,6 +9,7 @@ Repeats Demo A08 (Fan out into worktrees) and Demo A10 (A live dashboard on the 
 ## Before you start
 
 - You need the course repository clone. Set `COURSE` to it in every terminal for this lab, for example `export COURSE=~/opencode-advanced-labs`.
+- Run the preflight once, from the course repository root, if you have not already (Lab AL01 runs it): `bash "$COURSE/labs/advanced-preflight.sh"`. Fix every `FAIL` line before step 1. On Windows it catches the Microsoft Store `python3` stub (exit code 49, `Python was not found`), which breaks the `python3 -m unittest` commands the three child agents run through OpenCode's own shell. If it reports the stub, run `bash "$COURSE/labs/advanced-preflight.sh" --fix-python3`. If you cannot fix the `python3` line (for example your Python folder is locked down), you may continue: add this line at the end of the step 3 prompt, `On Windows run Python as py -3: tell each child to run py -3 -m unittest instead of python3.`; see the Windows note in [`labs/README.md`](../README.md#before-any-lab).
 - Create a fresh starter workspace. It needs no earlier lab, and it must be the starter: the tasks fix seeded defects D1, D3, and S1 to S5.
 
   ```bash
