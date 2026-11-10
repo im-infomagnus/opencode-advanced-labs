@@ -16,6 +16,8 @@ Three independent SkyRoute fixes for Module A08 and Lab AL06. Each task runs in 
 | T2 | D3 contingency fuel | `skyroute/fuel.py`, `tests/test_fuel.py` (new) | `python3 -m unittest tests.test_fuel -v` |
 | T3 | S1 to S5 report hardening | `skyroute/report.py`, `tests/test_report.py` (new) | `python3 -m unittest tests.test_report -v` |
 
+**Windows.** On Windows, unless the check-only `bash "$COURSE/labs/advanced-preflight.sh"` shows a working `python3` (rerun it after any `--fix-python3`), run these test commands as `py -3 -m unittest ...` and tell each child to do the same: the children run them through OpenCode's own shell, which may not see your Git Bash functions, and the Microsoft Store `python3` stub exits with code 49 (`Python was not found`). The `py -3` route also needs the full Windows setup in every terminal; see the AL06 README, "Before you start". The commands in this file stay as written for macOS and Linux.
+
 ## T1: Normalize the initial bearing (D1, SR-GEO-002)
 
 **Problem.** `geo.initial_bearing_deg` returns negative values for westbound legs. SR-GEO-002 requires true degrees in the range [0, 360).

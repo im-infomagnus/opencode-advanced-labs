@@ -9,6 +9,13 @@ Repeats Demo A08 (Fan out into worktrees) and Demo A10 (A live dashboard on the 
 ## Before you start
 
 - You need the course repository clone. Set `COURSE` to it in every terminal for this lab, for example `export COURSE=~/opencode-advanced-labs`.
+- Run the preflight once, from the course repository root, if you have not already (Lab AL01 runs it): `bash "$COURSE/labs/advanced-preflight.sh"`. Fix every `FAIL` line before step 1. On Windows it catches the Microsoft Store `python3` stub (exit code 49, `Python was not found`), which breaks the `python3 -m unittest` commands the three child agents run through OpenCode's own shell.
+  - **If it reports the stub, repair it, then check again.** Run `bash "$COURSE/labs/advanced-preflight.sh" --fix-python3`, then run the check-only `bash "$COURSE/labs/advanced-preflight.sh"` again in a new terminal. The repair run's own `PASS  created ...python3.exe` line shows only that a file was copied. You are done when the check-only run prints `PASS  python3 3.x (...)`. If it still prints the stub `FAIL` (your Python folder comes after `WindowsApps` on PATH), follow the App execution aliases steps in the Windows note in [`labs/README.md`](../README.md#before-any-lab), then run the check-only preflight again.
+  - **If you cannot fix the `python3` line** (for example your Python folder is locked down), use the `py -3` route in full, not only the prompt line:
+    - In every Git Bash terminal you use for this lab (T1, T2, and T3), set up the Windows functions and variables from the Windows note in [`labs/README.md`](../README.md#before-any-lab): the `python3` and `python` functions, `PYTHON="py -3"`, and `PYTHONUTF8=1`.
+    - Add this line at the end of the step 3 prompt: `On Windows run Python as py -3: tell each child to run py -3 -m unittest instead of python3.`
+    - Check it before step 3. In the TUI, type `!py -3 -m unittest tests.test_geo`: it runs in OpenCode's own shell and ends with `OK`. In Git Bash, run `python3 -m unittest tests.test_geo` and the step 2 dashboard command: neither may print `Python was not found`. The prompt line changes only what the children are told; it does not change the dashboard or your manual checks.
+  - The `py -3` route does not waive any other preflight `FAIL`. Fix those too, for example the default `model` line.
 - Create a fresh starter workspace. It needs no earlier lab, and it must be the starter: the tasks fix seeded defects D1, D3, and S1 to S5.
 
   ```bash
