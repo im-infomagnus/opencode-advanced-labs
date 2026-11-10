@@ -1,0 +1,176 @@
+{
+  "mission": "SkyRoute Ops Center",
+  "commander_files": [
+    "skyroute/cli.py",
+    "tests/test_cli.py",
+    "requirements/requirements.json",
+    "README.md",
+    "mission/BOARD.md",
+    "mission/log.md"
+  ],
+  "baseline_test_modules": [
+    "tests.test_fuel",
+    "tests.test_geo",
+    "tests.test_navdata",
+    "tests.test_navdata_characterization",
+    "tests.test_report",
+    "tests.test_route"
+  ],
+  "workstreams": [
+    {
+      "id": "W1",
+      "name": "Weather",
+      "depends_on": [],
+      "files": ["skyroute/weather.py", "data/metar.txt", "tests/test_weather.py", "requirements/w1.json"],
+      "test_module": "tests.test_weather",
+      "requirements": ["SR-WX-001", "SR-WX-002", "SR-WX-003", "SR-WX-004"],
+      "signatures": [
+        "@dataclass(frozen=True)",
+        "class Metar:",
+        "station: str",
+        "day: int",
+        "time_z: str",
+        "wind_dir_deg: int | None",
+        "wind_kt: int",
+        "gust_kt: int | None",
+        "visibility_sm: float",
+        "layers: tuple[tuple[str, int], ...]",
+        "ceiling_ft: int | None",
+        "temp_c: int",
+        "dewpoint_c: int",
+        "altimeter_inhg: float",
+        "raw: str",
+        "def parse_metar(text: str) -> Metar: ...",
+        "def flight_category(ceiling_ft: int | None, visibility_sm: float) -> str: ...",
+        "def load_metars(path: str | None = None) -> dict[str, Metar]: ..."
+      ]
+    },
+    {
+      "id": "W2",
+      "name": "NOTAMs",
+      "depends_on": [],
+      "files": ["skyroute/notam.py", "data/notams.txt", "tests/test_notam.py", "requirements/w2.json"],
+      "test_module": "tests.test_notam",
+      "requirements": ["SR-NTM-001", "SR-NTM-002", "SR-NTM-003", "SR-NTM-004"],
+      "signatures": [
+        "@dataclass(frozen=True)",
+        "class Notam:",
+        "location: str",
+        "number: str",
+        "category: str",
+        "start: datetime",
+        "end: datetime | None",
+        "text: str",
+        "def is_active(self, at: datetime) -> bool: ...",
+        "def parse_notam(text: str) -> Notam: ...",
+        "def load_notams(path: str | None = None) -> list[Notam]: ...",
+        "def notams_for_route(notams: list[Notam], idents: list[str], at: datetime) -> list[Notam]: ..."
+      ]
+    },
+    {
+      "id": "W3",
+      "name": "Performance",
+      "depends_on": [],
+      "files": [
+        "skyroute/performance.py",
+        "data/takeoff_table.csv",
+        "tests/test_performance.py",
+        "requirements/w3.json"
+      ],
+      "test_module": "tests.test_performance",
+      "requirements": ["SR-PERF-001", "SR-PERF-002", "SR-PERF-003", "SR-PERF-004"],
+      "signatures": [
+        "MAX_TAKEOFF_WEIGHT_LB = 2550.0",
+        "CG_LIMITS_IN = (35.0, 47.3)",
+        "@dataclass(frozen=True)",
+        "class LoadItem:",
+        "name: str",
+        "weight_lb: float",
+        "arm_in: float",
+        "@dataclass(frozen=True)",
+        "class WeightBalance:",
+        "total_weight_lb: float",
+        "total_moment_lbin: float",
+        "cg_in: float",
+        "within_limits: bool",
+        "messages: tuple[str, ...]",
+        "def weight_and_balance(items: list[LoadItem], max_weight_lb: float = MAX_TAKEOFF_WEIGHT_LB,",
+        "cg_limits_in: tuple[float, float] = CG_LIMITS_IN) -> WeightBalance: ...",
+        "def load_takeoff_table(path: str | None = None) -> dict[tuple[float, float, float], float]: ...",
+        "def takeoff_distance_ft(weight_lb: float, pressure_alt_ft: float, temp_c: float,",
+        "table: dict[tuple[float, float, float], float] | None = None) -> float: ..."
+      ]
+    },
+    {
+      "id": "W4",
+      "name": "Alternates",
+      "depends_on": ["W1"],
+      "files": ["skyroute/alternates.py", "tests/test_alternates.py", "requirements/w4.json"],
+      "test_module": "tests.test_alternates",
+      "requirements": ["SR-ALT-001", "SR-ALT-002", "SR-ALT-003"],
+      "signatures": [
+        "@dataclass(frozen=True)",
+        "class Alternate:",
+        "ident: str",
+        "distance_nm: float",
+        "category: str",
+        "def select_alternates(destination: str, metars: dict[str, Metar], max_distance_nm: float = 400.0,",
+        "accepted: tuple[str, ...] = (\"VFR\", \"MVFR\"),",
+        "navdata_path: str | None = None) -> list[Alternate]: ..."
+      ]
+    },
+    {
+      "id": "W5",
+      "name": "Briefing package",
+      "depends_on": ["W1", "W2", "W3", "W4"],
+      "files": ["skyroute/briefing.py", "tests/test_briefing.py", "requirements/w5.json"],
+      "test_module": "tests.test_briefing",
+      "requirements": ["SR-BRF-001", "SR-BRF-002", "SR-BRF-003", "SR-BRF-004"],
+      "signatures": [
+        "@dataclass(frozen=True)",
+        "class Briefing:",
+        "route: list[str]",
+        "distance_nm: float",
+        "ete_hours: float",
+        "fuel: FuelPlan",
+        "weather: dict[str, Metar | None]",
+        "categories: dict[str, str]",
+        "notams: list[Notam]",
+        "weight_balance: WeightBalance",
+        "takeoff_distance_ft: float | None",
+        "alternates: list[Alternate]",
+        "issued_at: datetime",
+        "warnings: list[str]",
+        "def build_briefing(route_idents: list[str], groundspeed_kt: float, burn_lb_per_hr: float,",
+        "at: datetime, load: list[LoadItem], *, metar_path: str | None = None,",
+        "notam_path: str | None = None, navdata_path: str | None = None,",
+        "takeoff_table_path: str | None = None) -> Briefing: ...",
+        "def render_text(briefing: Briefing) -> str: ...",
+        "def render_html(briefing: Briefing) -> str: ..."
+      ]
+    },
+    {
+      "id": "W6",
+      "name": "Assurance",
+      "depends_on": [],
+      "final_after": ["W1", "W2", "W3", "W4", "W5"],
+      "files": ["skyroute/assurance.py", "tests/test_assurance.py", "requirements/w6.json", "docs/evidence/"],
+      "final_files": ["docs/evidence/README.md", "docs/evidence/trace-matrix.md", "docs/evidence/test-run.txt"],
+      "test_module": "tests.test_assurance",
+      "requirements": ["SR-ASR-001", "SR-ASR-002", "SR-ASR-003"],
+      "signatures": [
+        "@dataclass(frozen=True)",
+        "class TraceRow:",
+        "requirement_id: str",
+        "component: str",
+        "tests: tuple[str, ...]",
+        "status: str",
+        "def load_fragments(directory: str = \"requirements\") -> list[dict]: ...",
+        "def merge_requirements(base: dict, fragments: list[dict]) -> dict: ...",
+        "def trace_matrix(requirements: dict, test_ids: set[str]) -> list[TraceRow]: ...",
+        "def render_trace_matrix(rows: list[TraceRow]) -> str: ...",
+        "def main(argv: list[str] | None = None) -> int: ..."
+      ]
+    }
+  ]
+}

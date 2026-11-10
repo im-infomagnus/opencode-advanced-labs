@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // Mission Control workspace baseline. Ordered rules; the last matching rule wins.
+  // Agent files (.opencode/agents/*.md) append their own rules after these.
+  "permissions": [
+    { "action": "shell", "resource": "*", "effect": "ask" },
+    { "action": "shell", "resource": "python3 -m unittest *", "effect": "allow" },
+    { "action": "shell", "resource": "python -m unittest *", "effect": "allow" },
+    { "action": "shell", "resource": "python3 tools/mission_status.py *", "effect": "allow" },
+    { "action": "shell", "resource": "python3 mission/check_prompt.py *", "effect": "allow" },
+    { "action": "shell", "resource": "ls *", "effect": "allow" },
+    { "action": "shell", "resource": "git status *", "effect": "allow" },
+    { "action": "shell", "resource": "git diff *", "effect": "allow" },
+    { "action": "shell", "resource": "git log *", "effect": "allow" },
+    { "action": "shell", "resource": "git show *", "effect": "allow" },
+    // "git diff --output=FILE" and "git log --output=FILE" write files.
+    { "action": "shell", "resource": "git *--output*", "effect": "ask" },
+    { "action": "shell", "resource": "git push *", "effect": "deny" },
+    { "action": "webfetch", "resource": "*", "effect": "ask" },
+    { "action": "websearch", "resource": "*", "effect": "ask" },
+    // Build allows paths outside the workspace by default; ask instead.
+    { "action": "external_directory", "resource": "*", "effect": "ask" }
+  ]
+}

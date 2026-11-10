@@ -1,0 +1,70 @@
+// Advanced kit configuration for a SkyRoute workspace.
+// install-advanced.sh writes this file as opencode.jsonc when the workspace has no
+// OpenCode config, or as opencode.advanced.jsonc next to an existing one for you to
+// merge by hand. The installer fills in references.skyroute-docs.path with the
+// absolute path of advanced-kit/reference/skyroute-docs.
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // Plugins in .opencode/plugins/ load automatically. Entries here add options.
+  // skyroute-trace and audit-log take no options.
+  "plugins": [
+    {
+      "package": "./.opencode/plugins/verify-on-edit",
+      "options": { "timeoutMs": 60000, "runTests": true, "python": "python3" },
+    },
+    {
+      // Lab AL05 stretch: set "disabled" to false and pick the reviewer model.
+      // "company-ai" and "your-model" are placeholders: set the provider ID and reviewer
+      // model your team uses (see `opencode models`).
+      "package": "./.opencode/plugins/ai-gate",
+      "options": {
+        "disabled": true,
+        "model": { "providerID": "company-ai", "id": "your-model" },
+        "actions": ["shell"],
+        // Commands that skip the review. The gate still reviews any of them that has a
+        // shell control character, a writing option (--output, --out, -o, --exec, -c),
+        // or a path argument outside the workspace (/..., ~..., ..), so
+        // "python3 -m unittest discover -s /elsewhere" is reviewed. Do not add
+        // "python3 -m skyroute *": export writes files wherever --out points.
+        "allowPatterns": [
+          "git status *",
+          "git diff *",
+          "git log *",
+          "ls *",
+          "python3 -m unittest *",
+          "python -m unittest *",
+        ],
+        "timeoutMs": 30000,
+      },
+    },
+  ],
+
+  // The audit-log plugin writes .opencode/audit/. Agents may not edit it. This blocks the
+  // edit, write, and patch tools only; a shell command can still change the files, and
+  // an agent rule that allows edits to "*" comes later and wins. Ship the log to your
+  // log system if you need a tamper-evident record.
+  "permissions": [
+    { "action": "edit", "resource": ".opencode/audit/*", "effect": "deny" },
+    { "action": "edit", "resource": "*/.opencode/audit/*", "effect": "deny" },
+  ],
+
+  "mcp": {
+    "servers": {
+      // Code Mode: tools.navdata.lookup_fix, tools.navdata.distance_nm, tools.navdata.route_legs.
+      // Permission actions: navdata_lookup_fix, navdata_distance_nm, navdata_route_legs.
+      // The server imports skyroute from its working directory, the workspace root.
+      "navdata": {
+        "type": "local",
+        "command": ["python3", ".opencode/mcp/navdata_server.py"],
+      },
+    },
+  },
+
+  "references": {
+    "skyroute-docs": {
+      "path": "__REFERENCE_DIR__",
+      "description": "Use for the SRN-1 navigation data format, the fuel policy behind the SR-FUEL requirements, and SkyRoute terminology",
+    },
+  },
+}

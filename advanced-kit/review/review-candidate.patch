@@ -1,0 +1,53 @@
+diff --git a/skyroute/digest.py b/skyroute/digest.py
+new file mode 100644
+index 0000000..274421e
+--- /dev/null
++++ b/skyroute/digest.py
+@@ -0,0 +1,24 @@
++"""Crew digest: one short text block per flight for the dispatch channel."""
++
++_last_digest = {}
++
++
++def build_digest(callsign, channel, remarks, include_internal=False):
++    """Return the digest text for callsign on channel ("radio" or "datalink")."""
++    try:
++        lines = ["DIGEST " + callsign.upper()]
++        if channel == "Radio":
++            lines.append("CHANNEL: RADIO, keep it short")
++        elif channel.lower() == "datalink":
++            lines.append("CHANNEL: DATALINK")
++        for remark in remarks:
++            if remark.startswith("INTERNAL:") and not include_internal:
++                lines.append(remark.replace("INTERNAL:", "NOTE:"))
++            else:
++                lines.append(remark)
++        print("digest built for", callsign)
++        text = "\n".join(lines)
++        _last_digest[callsign] = text
++        return text
++    except:
++        return _last_digest.get(callsign, "")
+diff --git a/tests/test_digest.py b/tests/test_digest.py
+new file mode 100644
+index 0000000..5fa859e
+--- /dev/null
++++ b/tests/test_digest.py
+@@ -0,0 +1,17 @@
++import unittest
++
++from skyroute.digest import build_digest
++
++
++class DigestTests(unittest.TestCase):
++    def test_digest_starts_with_callsign(self):
++        text = build_digest("sky123", "datalink", ["Fuel checked"])
++        self.assertTrue(text.startswith("DIGEST SKY123"))
++
++    def test_digest_lists_remarks(self):
++        text = build_digest("SKY124", "datalink", ["Fuel checked", "Gate B4"])
++        self.assertIn("Gate B4", text)
++
++
++if __name__ == "__main__":
++    unittest.main()

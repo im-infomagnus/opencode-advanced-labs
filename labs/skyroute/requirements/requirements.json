@@ -1,0 +1,162 @@
+{
+  "requirements": [
+    {
+      "id": "SR-GEO-001",
+      "title": "Great-circle distance",
+      "text": "Leg distance shall be the great-circle distance in nautical miles on a sphere of radius 3440.065 NM.",
+      "component": "skyroute/geo.py",
+      "verification": "test",
+      "tests": [
+        "tests.test_geo.GeoTests.test_distance_kdvt_to_kphx",
+        "tests.test_geo.GeoTests.test_distance_one_degree_of_longitude_at_equator"
+      ]
+    },
+    {
+      "id": "SR-GEO-002",
+      "title": "Bearing range",
+      "text": "Initial bearing shall be expressed in true degrees normalized to the range [0, 360).",
+      "component": "skyroute/geo.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-NAV-001",
+      "title": "SRN-1 record types",
+      "text": "The navigation data reader shall load airport (AP), waypoint (WP), and navaid (NV) records from SRN-1 files and ignore other record types.",
+      "component": "skyroute/navdata.py",
+      "verification": "test",
+      "tests": [
+        "tests.test_navdata.NavdataTests.test_airport_position"
+      ]
+    },
+    {
+      "id": "SR-NAV-002",
+      "title": "Comment lines",
+      "text": "Lines that start with '*' and blank lines shall be ignored.",
+      "component": "skyroute/navdata.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-NAV-003",
+      "title": "Malformed records",
+      "text": "A malformed record shall be skipped without stopping the load of the remaining records.",
+      "component": "skyroute/navdata.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-NAV-004",
+      "title": "Duplicate identifiers",
+      "text": "When an identifier appears more than once, the last record in the file shall be used. Lookup shall ignore case and surrounding spaces.",
+      "component": "skyroute/navdata.py",
+      "verification": "test",
+      "tests": [
+        "tests.test_navdata.NavdataTests.test_lookup_ignores_case"
+      ]
+    },
+    {
+      "id": "SR-RTE-001",
+      "title": "Route legs",
+      "text": "A route shall consist of one leg between each pair of consecutive fixes.",
+      "component": "skyroute/route.py",
+      "verification": "test",
+      "tests": [
+        "tests.test_route.RouteTests.test_legs_connect_consecutive_fixes",
+        "tests.test_route.RouteTests.test_leg_distance"
+      ]
+    },
+    {
+      "id": "SR-RTE-002",
+      "title": "Total distance",
+      "text": "Total route distance shall be the sum of the distances of all legs.",
+      "component": "skyroute/route.py",
+      "verification": "test",
+      "tests": [
+        "tests.test_route.RouteTests.test_total_distance_includes_every_leg"
+      ]
+    },
+    {
+      "id": "SR-RTE-003",
+      "title": "Time enroute",
+      "text": "Estimated time enroute shall be total distance divided by ground speed. A ground speed of zero or less shall be rejected.",
+      "component": "skyroute/route.py",
+      "verification": "test",
+      "tests": [
+        "tests.test_route.RouteTests.test_ete_rejects_zero_groundspeed"
+      ]
+    },
+    {
+      "id": "SR-FUEL-001",
+      "title": "Trip fuel",
+      "text": "Trip fuel shall be time enroute multiplied by the fuel burn rate.",
+      "component": "skyroute/fuel.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-FUEL-002",
+      "title": "Contingency fuel",
+      "text": "Contingency fuel shall be the configured percentage (default 5%) of trip fuel only.",
+      "component": "skyroute/fuel.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-FUEL-003",
+      "title": "Final reserve and total",
+      "text": "Final reserve shall be the configured minutes (default 30) at the burn rate. Total fuel shall be trip plus contingency plus reserve.",
+      "component": "skyroute/fuel.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-RPT-001",
+      "title": "Plan report",
+      "text": "The plan report shall list every leg with its distance and course, the total distance, the time enroute, and the fuel plan.",
+      "component": "skyroute/report.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-RPT-002",
+      "title": "Altitude input",
+      "text": "Cruise altitude input shall accept FLnnn or a number of feet. The software shall not evaluate or execute altitude input as code.",
+      "component": "skyroute/report.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-RPT-003",
+      "title": "Export file names",
+      "text": "Export file names shall contain only the characters [A-Za-z0-9_-]. Exported files shall stay inside the output directory.",
+      "component": "skyroute/report.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-RPT-004",
+      "title": "Archive creation",
+      "text": "Archive creation shall not pass user input to a command shell.",
+      "component": "skyroute/report.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-RPT-005",
+      "title": "Cached plan data",
+      "text": "Cached plan data shall be stored in a data-only format. The software shall not deserialize untrusted data into executable objects.",
+      "component": "skyroute/report.py",
+      "verification": "test",
+      "tests": []
+    },
+    {
+      "id": "SR-RPT-006",
+      "title": "Upload credentials",
+      "text": "Upload credentials shall be read from the SKYROUTE_UPLOAD_TOKEN environment variable and shall not be stored in source code.",
+      "component": "skyroute/report.py",
+      "verification": "test",
+      "tests": []
+    }
+  ]
+}

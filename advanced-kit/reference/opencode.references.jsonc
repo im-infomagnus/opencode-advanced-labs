@@ -1,0 +1,14 @@
+// Reference snippet for the SkyRoute reference documents (Module A04, Lab AL02).
+// Merge the "references" block into the workspace opencode.jsonc.
+// A relative path resolves from the directory that holds the config file, so this
+// file works where it stands. In a workspace config, use the absolute path of
+// advanced-kit/reference/skyroute-docs; install-advanced.sh writes it for you.
+{
+  "$schema": "https://opencode.ai/config.json",
+  "references": {
+    "skyroute-docs": {
+      "path": "./skyroute-docs",
+      "description": "Use for the SRN-1 navigation data format, the fuel policy behind the SR-FUEL requirements, and SkyRoute terminology",
+    },
+  },
+}
