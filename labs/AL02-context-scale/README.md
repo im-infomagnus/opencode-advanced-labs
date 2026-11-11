@@ -118,7 +118,7 @@ Repeats Demo A04 (Context at scale). Same as the demo: the `skyroute-docs` refer
 
    If `SID=` stops with `StopIteration`, or `$SID` is empty, no session is titled exactly `AL02 context`. Rename the session in the TUI (**Ctrl+R**) and run the line again, or copy the ID from `opencode session list -n 5` into `SID=<id>`.
 
-   Each line is one entry: `agent-switched` and `synthetic` messages that OpenCode added (such as the Plan mode reminder), `user` prompts, `assistant` steps with their tool calls and token counts, and `idle` markers. On Windows, paths in this output use backslashes (`tests\AGENTS.md`). Upward `AGENTS.md` files are not entries here: they are part of the system instructions, which the API does not return.
+   Each line is one entry: `agent-switched`, `synthetic`, and `system` messages that OpenCode added (such as the Plan mode reminder or a changed tool catalog), `user` prompts, `assistant` steps with their tool calls and token counts, and `idle` markers. Paths in this output use forward slashes on every platform. Upward `AGENTS.md` files are not entries here: they are part of the system instructions, which the API does not return.
 
    **Check:** an `assistant` line shows `read(...skyroute-docs/ops-manual-fuel-policy.md) completed`, and no line says `instructions loaded`, because nothing under `tests/` has been read yet. The last line counts the entries, for example `8 entries`. Note your number.
 

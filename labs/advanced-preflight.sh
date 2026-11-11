@@ -22,7 +22,12 @@ if [ -n "${BASH_VERSION:-}" ]; then pass "bash $BASH_VERSION"; else fail "not ru
 # 2. Git and OpenCode.
 if command -v git >/dev/null 2>&1; then pass "$(git --version)"; else fail "git not found"; fi
 if command -v opencode >/dev/null 2>&1; then
-  pass "opencode $(opencode --version 2>/dev/null | tr -d '\r')"
+  oc_version="$(opencode --version 2>/dev/null | tr -d '\r')"
+  pass "opencode $oc_version"
+  oc_numbers="$(printf '%s' "$oc_version" | grep -oE '[0-9]+\.[0-9]+' | head -n 1)"
+  if [ -n "$oc_numbers" ] && { [ "${oc_numbers%%.*}" -lt 2 ] || { [ "${oc_numbers%%.*}" -eq 2 ] && [ "${oc_numbers#*.}" -lt 1 ]; }; }; then
+    warn "OpenCode $oc_numbers is older than 2.1; some lab Checks (instructions reaching the model, session API output) can differ. Update OpenCode."
+  fi
 else
   fail "opencode not found on PATH"
 fi
@@ -61,6 +66,16 @@ elif [ "$windows" -eq 1 ]; then
   fi
 else
   fail "python3 3.10 or later not found (got '${version:-nothing}')"
+fi
+
+# 3b. On Windows OpenCode's shell is PowerShell, which can resolve a different python3 than Git Bash
+#     (for example an extensionless shim in ~/bin). A hung or empty answer here means the agents cannot run tests.
+if [ "$windows" -eq 1 ] && command -v powershell.exe >/dev/null 2>&1; then
+  ps_python="$(timeout 20 powershell.exe -NoProfile -Command 'python3 --version' 2>&1 | tr -d '\r' | head -n 1)"
+  case "$ps_python" in
+    "Python 3."*) pass "python3 in PowerShell (OpenCode's shell): $ps_python" ;;
+    *) fail "python3 does not run in PowerShell, the shell OpenCode agents use (got '${ps_python:-no output}'). Put a real python3.exe ahead of any python3 shim on PATH (for example ~/bin/python3), or use the py -3 route in labs/README.md (Windows)" ;;
+  esac
 fi
 
 # 4. Windows specifics.
