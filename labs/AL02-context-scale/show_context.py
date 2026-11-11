@@ -17,8 +17,9 @@ def short(path):
     try:
         rel = os.path.relpath(path)
     except ValueError:
-        return path
-    return path if rel.startswith("../..") else rel
+        return path.replace("\\", "/")
+    # Forward slashes on every platform, so the lab's expected strings match on Windows too.
+    return (path if rel.startswith(("../..", "..\\..")) else rel).replace("\\", "/")
 
 
 def tool_summary(part):
@@ -57,6 +58,9 @@ def describe(entry):
             return f"{entry.get('status')} ({entry.get('reason')}) {err.get('type')}: {err.get('message', '')[:60]}"
         first = (entry.get("summary") or "").strip().splitlines()[:1]
         return f"{entry.get('status')} ({entry.get('reason')}) summary starts: {first[0] if first else '(empty)'}"
+    if kind == "system":
+        text = " ".join((entry.get("description") or entry.get("text", "")).split())
+        return text[:90]
     if kind == "agent-switched":
         return f"agent {entry.get('agent')}"
     if kind == "idle":

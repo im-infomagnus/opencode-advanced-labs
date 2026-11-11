@@ -63,6 +63,8 @@ Repeats Demo A08 (Fan out into worktrees) and Demo A10 (A live dashboard on the 
 
 3. **Fan out.** Open `$COURSE/advanced-kit/fanout/fanout-prompt.md`, copy the prompt block under **Prompt**, and send it in T1 in the same session. It asks for one `execute` call that creates three worktrees, three background `general` subagents launched in one turn, a file check on each result, and a final table, with no merge.
 
+   On Windows, also add this line at the end of the prompt: `On Windows the shell is PowerShell 5.1: tell each child to separate commands with ; instead of &&.` The prompt tells each child to start commands with `cd "<directory>" &&`, which PowerShell 5.1 rejects, so each child would waste its first command and retry.
+
    **Check:** the transcript shows an `execute` call with three `worktree_create` calls and a `worktree_list`, then three `subagent` calls, and the parent says all three are launched. In T3, `git worktree list` prints four lines: the workspace on `[main]` and `t1-bearing`, `t2-fuel`, and `t3-report` under `~/worktrees`, each `(detached HEAD)` at your commit until its child runs `git switch -c fanout/<name>`.
 
    Run the fan-out in the TUI, as written. If you run the prompt headless instead (`opencode run "<prompt>"`), the command returns as soon as the children are launched. The children keep working in the service, and the parent resumes on each completion notice and posts its final table in the session (read it with `opencode session export <id>`). Wait for all of that before step 5. The best signal is the dashboard: every row `idle` with an outcome. As a fallback, poll from T3 until no session is running, for at most 40 minutes:
@@ -71,7 +73,7 @@ Repeats Demo A08 (Fan out into worktrees) and Demo A10 (A live dashboard on the 
    while [ "$(opencode api session.active | tr -d ' \r\n')" != '{"data":{}}' ] && [ "$SECONDS" -lt 2400 ]; do sleep 30; date +%H:%M; done
    ```
 
-   `session.active` lists running sessions for the whole service, so this loop also waits for other sessions you have running, such as a Mission you left open. Do not use `--standalone` for a headless fan-out: background children stop when the run ends.
+   `session.active` lists running sessions for the whole service, so this loop also waits for other sessions you have running, such as a Mission you left open or a session stuck at an approval prompt. If it never ends, run `opencode api session.active` to see the IDs, and abort or close the ones that are not part of this lab; or stop waiting and watch the dashboard until every row is `idle`. Do not use `--standalone` for a headless fan-out: background children stop when the run ends.
 
 4. **Watch the children.** In T1, on the parent session, press **Down** on an empty prompt to open the subagent picker. Select a child and press **Enter**. Press **Right** and **Left** to move between children, and **Up** to return to the parent. Use **Ctrl+1** to **Ctrl+0** to jump to a tab, and **Alt+Shift+Down** for the next tab with unread output. Then look at T2, and in T3 run:
 

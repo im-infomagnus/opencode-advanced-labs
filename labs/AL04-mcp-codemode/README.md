@@ -164,7 +164,7 @@ Repeats Demo A07 (One step, many tools). Same as the demo: the `navdata` and `re
 
 Reference files in the course repository:
 
-- [`advanced-kit/mcp/navdata_server.py`](../../advanced-kit/mcp/navdata_server.py) is the finished server. Diff it against your copy: `diff --strip-trailing-cr .opencode/mcp/navdata_server.py "$COURSE/advanced-kit/mcp/navdata_server.py"` should show only the scaffold comments.
+- [`advanced-kit/mcp/navdata_server.py`](../../advanced-kit/mcp/navdata_server.py) is the finished server. Diff it against your copy: `diff --strip-trailing-cr .opencode/mcp/navdata_server.py "$COURSE/advanced-kit/mcp/navdata_server.py"` should show only the module docstring, the scaffold comments, and your three function bodies.
 - [`advanced-kit/mcp/test_navdata_server.py`](../../advanced-kit/mcp/test_navdata_server.py) is the test you ran in step 2. It drives the server over stdio the way an MCP client does.
 - [`advanced-kit/opencode.advanced.jsonc`](../../advanced-kit/opencode.advanced.jsonc) registers the same `navdata` server. [`starter-kit/mcp/requirements_server.py`](../../starter-kit/mcp/requirements_server.py) is the second server.
 - [`advanced-kit/install-advanced.sh`](../../advanced-kit/install-advanced.sh) installs the reference server and config into a workspace in one step: `bash "$COURSE/advanced-kit/install-advanced.sh" ~/skyroute-al04`.

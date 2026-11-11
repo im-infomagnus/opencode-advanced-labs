@@ -234,7 +234,7 @@ def main(argv: list[str] | None = None) -> int:
 
     workspace = Path(os.path.realpath(os.path.expanduser(msys_to_windows(args.workspace))))
     if not workspace.is_dir():
-        print(f"dashboard: {workspace} does not exist. Run demos/mission-control/setup-mission.sh first.", file=sys.stderr)
+        print(f"dashboard: {workspace} does not exist. Check the --workspace path.", file=sys.stderr)
         return 1
     status = StatusCache(load_status_module(workspace), args.status_every, not args.no_tests)
 
