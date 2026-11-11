@@ -44,6 +44,10 @@ Lab materials for the two-day advanced OpenCode workshop. Everything here is syn
 
 Each lab repeats something the instructor demonstrated, then adds a step of its own. Start with [`labs/README.md`](labs/README.md): it explains workspaces, Windows setup, and how to catch up if you miss a lab.
 
+## Labs for OpenCode 1
+
+On OpenCode 1? Use the [OpenCode 1 lab track](labs-v1/README.md): a handbook and ten hands-on labs on the same SkyRoute code.
+
 ## What is in this repository
 
 | Path | What it is |
@@ -55,3 +59,4 @@ Each lab repeats something the instructor demonstrated, then adds a step of its 
 | `demos/mission-control/` | The live dashboard, the TUI layout file, and the Mission Control kit the instructor runs, for comparison in Lab AL03 |
 | `starter-kit/mcp/requirements_server.py` | The requirements MCP server used in Lab AL04 |
 | `participant/cheat-sheet.md` | One-page OpenCode v2 reference |
+| `labs-v1/` | Hands-on labs for teams on OpenCode 1 |
