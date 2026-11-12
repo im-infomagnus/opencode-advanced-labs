@@ -46,7 +46,7 @@ Each lab repeats something the instructor demonstrated, then adds a step of its 
 
 ## Labs for OpenCode 1
 
-On OpenCode 1? Use the [OpenCode 1 lab track](labs-v1/README.md): a handbook and eleven hands-on labs on the same SkyRoute code.
+On OpenCode 1? Use the [OpenCode 1 lab track](labs-v1/README.md): a handbook and twelve hands-on labs on the same SkyRoute code.
 
 ## What is in this repository
 

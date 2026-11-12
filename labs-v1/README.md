@@ -1,6 +1,6 @@
 # OpenCode 1 hands-on labs: handbook
 
-Eleven labs on the SkyRoute flight planner (synthetic code). Each lab is 20 to 40 minutes. Do them in order; later labs reuse files from earlier ones.
+Twelve labs on the SkyRoute flight planner (synthetic code). Each lab is 20 to 40 minutes. Do them in order; later labs reuse files from earlier ones.
 
 | # | Lab | Time | You build |
 |---|---|---|---|
@@ -15,6 +15,7 @@ Eleven labs on the SkyRoute flight planner (synthetic code). Each lab is 20 to 4
 | 9 | [MCP server](V1-09-mcp.md) | 30 min | A requirements tool for the agent |
 | 10 | [Plugin and headless](V1-10-plugin-headless.md) | 40 min | An audit plugin and a CI review |
 | 11 | [Skills, before and after](V1-11-skills-before-after.md) | 35 min | Two skills, one reading a PDF |
+| 12 | [Hand off between threads](V1-12-thread-handoff.md) | 25 min | A plan from one session, built in another |
 
 ## Before any lab
 
