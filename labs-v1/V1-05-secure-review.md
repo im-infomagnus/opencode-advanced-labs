@@ -40,7 +40,7 @@ The token in `report.py` is fake. Practise the real habit anyway: report where a
 4. **Failing tests.** **Tab** to **Build**. Send:
 
    ```text
-   Create tests/test_report.py. Do not change skyroute/.
+   Create tests/test_report.py with only these tests. Do not change skyroute/.
    1. CWE-22: export("x", "../escaped", out_dir) raises ValueError and creates
       nothing outside out_dir. Use a temporary directory.
    2. CWE-95: parse_altitude("FL350") is 35000, "12500" is 12500, and
